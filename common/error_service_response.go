@@ -3,16 +3,15 @@ package common
 import (
 	"net/http"
 
-	"github.com/hanifbg/login_register_v2/service"
+	"iam-api-service/service"
 )
 
 type errorServiceResponse string
 
 const (
-	errInternalServerError errorServiceResponse = "internal_server_error"
-	errHasBeenModified     errorServiceResponse = "data_has_been modified"
-	errNotFound            errorServiceResponse = "data_not_found"
-	errInvalidSpec         errorServiceResponse = "invalid_spec"
+	errInternalServerError errorServiceResponse = "500"
+	errNotFound            errorServiceResponse = "404"
+	errInvalidSpec         errorServiceResponse = "400"
 )
 
 //BusinessResponse default payload response
@@ -36,8 +35,8 @@ func errorMapping(err error) (int, ServiceResponse) {
 		return newNotFoundResponse()
 	case service.ErrInvalidData:
 		return newValidationResponse(err.Error())
-	case service.ErrHasBeenModified:
-		return newHasBeedModifiedResponse()
+	case service.ErrLogin:
+		return newErrLoginResponse(err.Error())
 	}
 }
 
@@ -46,15 +45,6 @@ func newInternalServerErrorResponse() (int, ServiceResponse) {
 	return http.StatusInternalServerError, ServiceResponse{
 		errInternalServerError,
 		"Internal server error",
-		map[string]interface{}{},
-	}
-}
-
-//newHasBeedModifiedResponse failed to validate request payload
-func newHasBeedModifiedResponse() (int, ServiceResponse) {
-	return http.StatusBadRequest, ServiceResponse{
-		errHasBeenModified,
-		"Data has been modified",
 		map[string]interface{}{},
 	}
 }
@@ -73,6 +63,15 @@ func newValidationResponse(message string) (int, ServiceResponse) {
 	return http.StatusBadRequest, ServiceResponse{
 		errInvalidSpec,
 		"Validation failed " + message,
+		map[string]interface{}{},
+	}
+}
+
+//newErrLogin email or password is incorrect
+func newErrLoginResponse(message string) (int, ServiceResponse) {
+	return http.StatusBadRequest, ServiceResponse{
+		errInvalidSpec,
+		message,
 		map[string]interface{}{},
 	}
 }

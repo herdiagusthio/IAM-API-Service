@@ -1,10 +1,11 @@
 package migration
 
 import (
-	"github.com/hanifbg/login_register_v2/repository/user"
+	"iam-api-service/repository/user"
+
 	"gorm.io/gorm"
 )
 
 func InitMigrate(db *gorm.DB) {
-	db.AutoMigrate(&user.User{})
+	db.AutoMigrate(&user.User{}, &user.Role{})
 }

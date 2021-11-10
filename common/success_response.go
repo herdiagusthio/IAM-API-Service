@@ -6,7 +6,7 @@ type SuccessResponseCode string
 
 //List of success response status
 const (
-	Success SuccessResponseCode = "success"
+	Success SuccessResponseCode = "200"
 )
 
 //SuccessResponse default payload response

@@ -1,12 +1,10 @@
 package user
 
 import (
-	"fmt"
+	"iam-api-service/common"
+	"iam-api-service/handler/user/request"
+	"iam-api-service/service/user"
 
-	"github.com/golang-jwt/jwt"
-	"github.com/hanifbg/login_register_v2/common"
-	"github.com/hanifbg/login_register_v2/handler/user/request"
-	"github.com/hanifbg/login_register_v2/service/user"
 	echo "github.com/labstack/echo/v4"
 )
 
@@ -48,23 +46,4 @@ func (handler *Handler) LoginUser(c echo.Context) error {
 	}
 
 	return c.JSON(common.NewSuccessResponse(token))
-}
-
-func (handler *Handler) AuthUser(c echo.Context) error {
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims) //conver to jwt.MapClaims
-
-	userID, ok := claims["id"]
-	userRole, ok := claims["role"]
-
-	if !ok {
-		return c.JSON(common.NewForbiddenResponse())
-	}
-
-	data := map[string]string{
-		"id":   fmt.Sprintf("%v", userID),
-		"role": fmt.Sprintf("%v", userRole),
-	}
-
-	return c.JSON(common.NewSuccessResponse(data))
 }

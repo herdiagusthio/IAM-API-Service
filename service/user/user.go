@@ -1,6 +1,8 @@
 package user
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	ID           uint
@@ -8,34 +10,29 @@ type User struct {
 	UpdatedAt    time.Time
 	DeletedAt    *time.Time
 	Name         string
-	Email        string `gorm:"unique"`
-	Phone_number string `gorm:"unique"`
+	Email        string
+	Phone_number string
 	Password     string
-	Address      string
-	Role         int
-	Token_hash   string
+	RoleID       uint
 }
 
-func NewUser(
+func NewUserFromHandler(
 	name string,
 	email string,
 	phoneNumber string,
 	password string,
-	address string,
 	createdAt time.Time,
 	updatedAt time.Time,
 ) User {
 	return User{
 		ID:           0,
-		CreatedAt:    createdAt,
-		UpdatedAt:    updatedAt,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 		DeletedAt:    nil,
 		Name:         name,
 		Email:        email,
 		Phone_number: phoneNumber,
 		Password:     password,
-		Address:      address,
-		Role:         1,
-		Token_hash:   "",
+		RoleID:       2,
 	}
 }

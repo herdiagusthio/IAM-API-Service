@@ -1,13 +1,13 @@
 package user
 
 import (
-	"errors"
 	"os"
 	"time"
 
+	serv "iam-api-service/service"
+	"iam-api-service/util/validator"
+
 	"github.com/golang-jwt/jwt"
-	serv "github.com/hanifbg/login_register_v2/service"
-	"github.com/hanifbg/login_register_v2/util/validator"
 )
 
 type service struct {
@@ -27,7 +27,6 @@ type CreateUserData struct {
 	Email        string `validate:"required"`
 	Phone_number string `validate:"required,number"`
 	Password     string `validate:"required"`
-	Address      string
 }
 
 func (s *service) CreateUser(data CreateUserData) error {
@@ -37,12 +36,11 @@ func (s *service) CreateUser(data CreateUserData) error {
 	}
 
 	hashedPassword, _ := s.utilPassword.EncryptPassword(data.Password)
-	user := NewUser(
+	user := NewUserFromHandler(
 		data.Name,
 		data.Email,
 		data.Phone_number,
 		string(hashedPassword),
-		data.Address,
 		time.Now(),
 		time.Now(),
 	)
@@ -61,14 +59,14 @@ func (s *service) LoginUser(email string, password string) (string, error) {
 	}
 
 	if !s.utilPassword.ComparePassword(userData.Password, password) {
-		return "", errors.New("wrong credentials")
+		return "", serv.ErrLogin
 	}
 
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["id"] = userData.ID
-	claims["role"] = "default"
-	if userData.Role != 1 {
+	claims["role"] = "user"
+	if userData.RoleID == 1 {
 		claims["role"] = "admin"
 	}
 	claims["exp"] = time.Now().Add(time.Hour * 1).Unix() //expired token

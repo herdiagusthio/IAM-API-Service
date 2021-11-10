@@ -7,12 +7,12 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/hanifbg/login_register_v2/config"
-	"github.com/hanifbg/login_register_v2/handler"
-	userHandler "github.com/hanifbg/login_register_v2/handler/user"
-	userRepo "github.com/hanifbg/login_register_v2/repository/user"
-	userService "github.com/hanifbg/login_register_v2/service/user"
-	util "github.com/hanifbg/login_register_v2/util/password"
+	"iam-api-service/config"
+	"iam-api-service/handler"
+	userHandler "iam-api-service/handler/user"
+	userRepo "iam-api-service/repository/user"
+	userService "iam-api-service/service/user"
+	util "iam-api-service/util/password"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"

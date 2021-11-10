@@ -4,23 +4,23 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hanifbg/login_register_v2/service/user"
+	"iam-api-service/service/user"
 
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID          uint
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   *time.Time
-	Name        string `json:"name"  validate:"required"`
-	Email       string `json:"email" validate:"required,email" gorm:"type:varchar(20),unique"`
-	PhoneNumber string `json:"phone_number" validate:"required,number" gorm:"unique"`
-	Password    string `json:"password"  validate:"required"`
-	Address     string `json:"address"  validate:"required"`
-	Role        int
-	Token_hash  string
+	gorm.Model
+	Name        string `gorm:"name; type:varchar(50); not null"`
+	Email       string `gorm:"email; type:varchar(50); unique; not null"`
+	PhoneNumber string `gorm:"phone_number; unique; not null"`
+	Password    string `gorm:"password; not null"`
+	RoleID      uint   `gorm:"role_id; not null"`
+}
+
+type Role struct {
+	gorm.Model
+	RoleName string `gorm:"name; not null"`
 }
 
 type GormRepository struct {
@@ -30,17 +30,12 @@ type GormRepository struct {
 func newUserTable(user user.User) *User {
 
 	return &User{
-		user.ID,
-		user.CreatedAt,
-		user.UpdatedAt,
-		user.DeletedAt,
+		gorm.Model{user.ID, user.CreatedAt, user.UpdatedAt, gorm.DeletedAt{time.Time{}, false}},
 		user.Name,
 		user.Email,
 		user.Phone_number,
 		user.Password,
-		user.Address,
-		user.Role,
-		user.Token_hash,
+		user.RoleID,
 	}
 }
 func NewGormDBRepository(db *gorm.DB) *GormRepository {
@@ -49,20 +44,18 @@ func NewGormDBRepository(db *gorm.DB) *GormRepository {
 	}
 }
 
-func (col *User) ToUser() user.User {
+func (col *User) ToUserService() user.User {
 	var user user.User
 
 	user.ID = col.ID
-	user.Name = col.Name
-	user.Email = col.Email
-	user.Password = col.Password
 	user.CreatedAt = col.CreatedAt
 	user.UpdatedAt = col.UpdatedAt
-	user.DeletedAt = col.DeletedAt
-	user.Address = col.Address
-	user.Role = col.Role
-	user.Token_hash = col.Token_hash
+	user.DeletedAt = &col.DeletedAt.Time
+	user.Name = col.Name
+	user.Email = col.Email
 	user.Phone_number = col.PhoneNumber
+	user.Password = col.Password
+	user.RoleID = col.RoleID
 
 	return user
 }
@@ -86,7 +79,7 @@ func (repo *GormRepository) LoginUser(email string) (*user.User, error) {
 		return nil, err
 	}
 
-	user := userData.ToUser()
+	user := userData.ToUserService()
 
 	return &user, nil
 }

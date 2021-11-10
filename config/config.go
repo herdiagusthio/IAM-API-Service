@@ -55,9 +55,9 @@ func initConfig() *AppConfig {
 	defaultConfig.DbDriver = "mysql"
 	defaultConfig.DbAddress = "localhost"
 	defaultConfig.DbPort = 3306
-	defaultConfig.DbUsername = "root"
-	defaultConfig.DbPassword = "1"
-	defaultConfig.DbName = "alta_final"
+	defaultConfig.DbUsername = "db_username"
+	defaultConfig.DbPassword = "db_password"
+	defaultConfig.DbName = "db_name"
 
 	//use this for json check app.config.json for example
 

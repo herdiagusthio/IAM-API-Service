@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/hanifbg/login_register_v2/repository/migration"
-	"github.com/hanifbg/login_register_v2/repository/user"
+	"iam-api-service/repository/migration"
+	"iam-api-service/repository/user"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

@@ -4,14 +4,14 @@ import "errors"
 
 var (
 	//ErrInternalServerError Error caused by system error
-	ErrInternalServerError = errors.New("Internal Server Error")
-
-	//ErrHasBeenModified Error when update item that has been modified
-	ErrHasBeenModified = errors.New("Data has been modified")
+	ErrInternalServerError = errors.New("internal server error")
 
 	//ErrNotFound Error when item is not found
-	ErrNotFound = errors.New("Data was not found")
+	ErrNotFound = errors.New("data was not found")
 
 	//ErrInvalidSpec Error when data given is not valid on update or insert
-	ErrInvalidData = errors.New("Given data is not valid")
+	ErrInvalidData = errors.New("given data is not valid")
+
+	//ErrLogin Error when email or password is incorrect
+	ErrLogin = errors.New("email or password is incorrect")
 )

@@ -6,9 +6,10 @@ import (
 	"testing"
 	"time"
 
-	serv "github.com/hanifbg/login_register_v2/service"
-	"github.com/hanifbg/login_register_v2/service/user"
-	userMock "github.com/hanifbg/login_register_v2/service/user/mocks"
+	serv "iam-api-service/service"
+	"iam-api-service/service/user"
+	userMock "iam-api-service/service/user/mocks"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -34,12 +35,11 @@ var (
 )
 
 func setup() {
-	userData = user.NewUser(
+	userData = user.NewUserFromHandler(
 		name,
 		email,
 		phone_number,
 		password,
-		address,
 		time.Now(),
 		time.Now(),
 	)
@@ -51,7 +51,6 @@ func setup() {
 		Email:        email,
 		Phone_number: phone_number,
 		Password:     password,
-		Address:      address,
 	}
 
 	invalidInsertData = user.CreateUserData{
@@ -59,7 +58,6 @@ func setup() {
 		Email:        email,
 		Phone_number: "",
 		Password:     password,
-		Address:      address,
 	}
 
 	userService = user.NewService(&userRepo, &util)
