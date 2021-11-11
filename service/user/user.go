@@ -36,3 +36,24 @@ func NewUserFromHandler(
 		RoleID:       2,
 	}
 }
+
+func NewAdminFromHandler(
+	name string,
+	email string,
+	phoneNumber string,
+	password string,
+	createdAt time.Time,
+	updatedAt time.Time,
+) User {
+	return User{
+		ID:           0,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
+		DeletedAt:    nil,
+		Name:         name,
+		Email:        email,
+		Phone_number: phoneNumber,
+		Password:     password,
+		RoleID:       1,
+	}
+}

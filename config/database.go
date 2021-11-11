@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"iam-api-service/repository/migration"
-	"iam-api-service/repository/user"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -40,36 +39,4 @@ func NewDatabaseConnection(config *AppConfig) *gorm.DB {
 	migration.InitMigrate(db)
 
 	return db
-}
-
-func TestDatabaseConnection() {
-
-	configDB := map[string]string{
-		"DB_Username": "root",
-		"DB_Password": "1",
-		"DB_Port":     "3306",
-		"DB_Host":     "127.0.0.1",
-		"DB_Name":     "alta_final_test",
-	}
-
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		configDB["DB_Username"],
-		configDB["DB_Password"],
-		configDB["DB_Host"],
-		configDB["DB_Port"],
-		configDB["DB_Name"])
-
-	fmt.Println(connectionString)
-
-	var e error
-	DB, e = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
-	if e != nil {
-		panic(e)
-	}
-
-	InitMigrate()
-}
-
-func InitMigrate() {
-	DB.AutoMigrate(&user.User{})
 }

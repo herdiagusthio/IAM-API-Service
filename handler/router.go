@@ -13,6 +13,7 @@ func RegisterPath(e *echo.Echo, userHandler *user.Handler) {
 	userV1.POST("/register", userHandler.CreateUser)
 	userV1.POST("/login", userHandler.LoginUser)
 
-	cobaV1 := e.Group("v1/auth")
-	cobaV1.Use(middleware.JWTMiddleware())
+	adminV1 := e.Group("v1/admin")
+	adminV1.Use(middleware.JWTMiddleware())
+	adminV1.POST("/create-admin", userHandler.CreateAdmin)
 }

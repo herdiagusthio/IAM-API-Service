@@ -47,7 +47,7 @@ func (s *service) CreateUser(data CreateUserData) error {
 
 	err = s.repository.CreateUser(user)
 	if err != nil {
-		return serv.ErrInternalServerError
+		return serv.ErrRegister
 	}
 	return nil
 }
@@ -74,4 +74,27 @@ func (s *service) LoginUser(email string, password string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+}
+
+func (s *service) CreateAdmin(data CreateUserData) error {
+	err := validator.GetValidator().Struct(data)
+	if err != nil {
+		return serv.ErrInvalidData
+	}
+
+	hashedPassword, _ := s.utilPassword.EncryptPassword(data.Password)
+	user := NewAdminFromHandler(
+		data.Name,
+		data.Email,
+		data.Phone_number,
+		string(hashedPassword),
+		time.Now(),
+		time.Now(),
+	)
+
+	err = s.repository.CreateUser(user)
+	if err != nil {
+		return serv.ErrRegister
+	}
+	return nil
 }

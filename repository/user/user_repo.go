@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"time"
 
 	"iam-api-service/service/user"
@@ -74,7 +73,6 @@ func (repo *GormRepository) LoginUser(email string) (*user.User, error) {
 	var userData User
 
 	err := repo.DB.Where("email = ?", email).First(&userData).Error
-	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}

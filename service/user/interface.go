@@ -3,6 +3,7 @@ package user
 type Service interface {
 	CreateUser(CreateUserData) error
 	LoginUser(email string, password string) (token string, err error)
+	CreateAdmin(CreateUserData) error
 }
 
 type Repository interface {

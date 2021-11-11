@@ -5,6 +5,7 @@ import (
 	"iam-api-service/handler/user/request"
 	"iam-api-service/service/user"
 
+	"github.com/golang-jwt/jwt"
 	echo "github.com/labstack/echo/v4"
 )
 
@@ -46,4 +47,30 @@ func (handler *Handler) LoginUser(c echo.Context) error {
 	}
 
 	return c.JSON(common.NewSuccessResponse(token))
+}
+
+func (handler *Handler) CreateAdmin(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	if !user.Valid {
+		return c.JSON(common.NewForbiddenResponse())
+	}
+
+	claims := user.Claims.(jwt.MapClaims)
+	role, ok := claims["role"].(string)
+	if !ok || role != "admin" {
+		return c.JSON(common.NewForbiddenResponse())
+	}
+
+	createUserReq := new(request.CreateUserRequest)
+
+	if err := c.Bind(createUserReq); err != nil {
+		return c.JSON(common.NewBadRequestResponse())
+	}
+
+	err := handler.service.CreateAdmin(*createUserReq.ConvertToUserData())
+	if err != nil {
+		return c.JSON(common.NewErrorBusinessResponse(err))
+	}
+
+	return c.JSON(common.NewSuccessResponseWithoutData())
 }

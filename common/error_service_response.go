@@ -11,7 +11,8 @@ type errorServiceResponse string
 const (
 	errInternalServerError errorServiceResponse = "500"
 	errNotFound            errorServiceResponse = "404"
-	errInvalidSpec         errorServiceResponse = "400"
+	errBadRequest          errorServiceResponse = "400"
+	errConflict            errorServiceResponse = "409"
 )
 
 //BusinessResponse default payload response
@@ -37,6 +38,8 @@ func errorMapping(err error) (int, ServiceResponse) {
 		return newValidationResponse(err.Error())
 	case service.ErrLogin:
 		return newErrLoginResponse(err.Error())
+	case service.ErrRegister:
+		return newErrRegisterResponse(err.Error())
 	}
 }
 
@@ -61,16 +64,25 @@ func newNotFoundResponse() (int, ServiceResponse) {
 //newValidationResponse failed to validate request payload
 func newValidationResponse(message string) (int, ServiceResponse) {
 	return http.StatusBadRequest, ServiceResponse{
-		errInvalidSpec,
-		"Validation failed " + message,
+		errBadRequest,
+		"Validation failed, " + message,
 		map[string]interface{}{},
 	}
 }
 
-//newErrLogin email or password is incorrect
+//newErrLoginResponse email or password is incorrect
 func newErrLoginResponse(message string) (int, ServiceResponse) {
 	return http.StatusBadRequest, ServiceResponse{
-		errInvalidSpec,
+		errBadRequest,
+		message,
+		map[string]interface{}{},
+	}
+}
+
+//newErrRegisterResponse email or password already registered
+func newErrRegisterResponse(message string) (int, ServiceResponse) {
+	return http.StatusConflict, ServiceResponse{
+		errConflict,
 		message,
 		map[string]interface{}{},
 	}

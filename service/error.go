@@ -14,4 +14,7 @@ var (
 
 	//ErrLogin Error when email or password is incorrect
 	ErrLogin = errors.New("email or password is incorrect")
+
+	//ErrRegister Error when duplicate entry on email or phone_number
+	ErrRegister = errors.New("email or phone_number already registered")
 )
